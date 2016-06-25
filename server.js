@@ -26,6 +26,7 @@ app.get('/api/users', function(req, res) {
 app.get('/api/users/add', function(req, res) {
   var conString = process.env.ELEPHANTSQL_URL || null;
   var client = new pg.Client(conString);
+  console.log('connected');
 
   client.connect(function(err) {
     if(err) {
@@ -39,6 +40,7 @@ app.get('/api/users/add', function(req, res) {
           return console.error('error running query', err);
         }
       client.end();
+      console.log('query ended');
     });
   });
   res.redirect('/');

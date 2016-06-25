@@ -9,18 +9,17 @@
 
   User.loadAll = function() {
     let jqDef = Promise.resolve($.get('/api/users'));
-    jqDef.then(function(data) {
+
+    function buildUsers(data) {
       data.rows.forEach(function(ele) {
         User.all.push(new User(ele));
       })
-      console.log('creating users');
-    }).then(function() {
       localStorage.users = JSON.stringify(User.all);
-      console.log('storing users');
-    }).then(function() {
-      User.renderAll();
-      console.log('renderAll complete');
-    })
+    }
+
+    jqDef.then(buildUsers, function(err) {
+      if (err) console.error(err);
+    }).then(User.renderAll);
   }
 
   User.prototype.toHTML = function() {
@@ -47,16 +46,11 @@
   };
 
   User.prototype.add = function() {
-    $.get('/api/users/add', {name: this.name, age: this.age, sex: this.sex}, function(data) {
-
-    }).error(function(err) {
-      console.error(err);
-    }).done(function() {
-      User.clearHTML();
-      console.log('User.add Done.');
-    }).done(function() {
-      window.setTimeout(User.loadAll, 100); // This is a hack to let the DB update before running loadAll
-    })
+    let jqDef = Promise.resolve($.get('/api/users/add', {name: this.name, age: this.age, sex: this.sex}));
+    console.log(jqDef);
+    // jqDef.then(User.clearHTML, function(err) {
+    //   if (err) console.error(err);
+    // }).then(User.loadAll);
   };
 
   User.prototype.update = function() {

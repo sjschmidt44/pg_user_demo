@@ -2,10 +2,13 @@
   $('#user_form').on('submit', function(e) {
     if ($('#user_form')[0].user_submit.value === 'Submit') {
       addNew(e, this);
+      console.log('added');
     } else if ($('#user_form')[0].user_submit.value === 'Update') {
       update(e);
+      console.log('deleted');
     } else if ($('#user_form')[0].user_submit.value === 'Delete') {
       deleteRecord(e, this);
+      console.log('updated');
     }
   });
 
@@ -42,6 +45,7 @@
       age: parseInt(ele.user_age.value),
       sex: ele.user_sex.value
     })
+    console.log(newUser);
     newUser.add()
     ele.user_name.value = null;
     ele.user_age.value = null;
