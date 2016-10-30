@@ -1,79 +1,54 @@
-(function() {
-  $('#user_form').on('submit', function(e) {
-    if ($('#user_form')[0].user_submit.value === 'Submit') {
-      addNew(e, this);
-      console.log('added');
-    } else if ($('#user_form')[0].user_submit.value === 'Update') {
-      update(e);
-      console.log('deleted');
-    } else if ($('#user_form')[0].user_submit.value === 'Delete') {
-      deleteRecord(e, this);
-      console.log('updated');
-    }
-  });
+'use strict'
 
-  $('#users').on('click', 'section', function(e) {
-    var id = $(this).data('record');
-    var user = User.all.filter(function(ele) {
-      return ele.id === id;
-    });
-
-    $('#user_form')[0].user_name.value = $(this).find('li')[0].textContent;
-    $('#user_form')[0].dataset.record = $(this).data('record');
-    $('#user_form')[0].user_age.value = $(this).find('li')[1].textContent;
-    $('#user_form')[0].user_sex.value = $(this).find('li')[2].textContent;
-    $('#user_form')[0].user_submit.value = 'Update';
-  });
-
-  $('#users').on('dblclick', 'section', function(e) {
-    var id = $(this).data('record');
-    var user = User.all.filter(function(ele) {
-      return ele.id === id;
-    });
-
-    $('#user_form')[0].user_name.value = $(this).find('li')[0].textContent;
-    $('#user_form')[0].dataset.record = $(this).data('record');
-    $('#user_form')[0].user_age.value = $(this).find('li')[1].textContent;
-    $('#user_form')[0].user_sex.value = $(this).find('li')[2].textContent;
-    $('#user_form')[0].user_submit.value = 'Delete';
-  });
-
-  function addNew(ev, ele) {
-    ev.preventDefault();
-    var newUser = new User({
-      name: ele.user_name.value,
-      age: parseInt(ele.user_age.value),
-      sex: ele.user_sex.value
-    })
-    console.log(newUser);
-    newUser.add()
-    ele.user_name.value = null;
-    ele.user_age.value = null;
-    ele.user_sex.value = null;
+$('#user_form').on('submit', $(this), function(e) {
+  e.preventDefault()
+  if (e.target.user_submit.value === 'Enter') {
+    addNew(e)
+  } else if (e.target.user_submit.value === 'Update') {
+    update(e)
+  } else if (e.target.user_submit.value === 'Delete') {
+    deleteRecord(e)
   }
+})
 
-  function update(ev) {
-    ev.preventDefault();
-    var id = parseInt(ev.target.dataset.record);
-    var user = User.all.filter(function(el) {
-      return el.id === id;
-    });
-    if (user.length === 1) {
-      user[0].update();
-    } else {
-      console.error('IndexError: Record does not exist.');
-    }
-  }
+$('#users').on('click', 'section', function() {
+  $('#user_form')[0].dataset.record = $(this).data('record')
+  $('#user_form')[0].user_name.value = $(this).find('li')[0].textContent
+  $('#user_form')[0].user_age.value = $(this).find('li')[1].textContent
+  $('#user_form')[0].user_sex.value = $(this).find('li')[2].textContent
+  $('#user_form')[0].user_submit.value = 'Update'
+})
 
-  function deleteRecord(e, ele) {
-    var id = $(ele).data('record');
-    var user = User.all.filter(function(el) {
-      return el.id === id;
-    });
-    if (user.length === 1) {
-      user[0].delete();
-    } else {
-      console.error('IndexError: Record does not exist');
-    }
-  }
-})()
+$('#users').on('dblclick', 'section', function() {
+  $('#user_form')[0].dataset.record = $(this).data('record')
+  $('#user_form')[0].user_name.value = $(this).find('li')[0].textContent
+  $('#user_form')[0].user_age.value = $(this).find('li')[1].textContent
+  $('#user_form')[0].user_sex.value = $(this).find('li')[2].textContent
+  $('#user_form')[0].user_submit.value = 'Delete'
+})
+
+function addNew(ev) {
+  const newUser = new User({
+    name: ev.target.user_name.value,
+    age: parseInt(ev.target.user_age.value),
+    sex: ev.target.user_sex.value
+  })
+  newUser.add()
+  ev.target.user_name.value = null
+  ev.target.user_age.value = null
+  ev.target.user_sex.value = null
+}
+
+function update(ev) {
+  const user = User.all.filter(el => el.id === parseInt(ev.target.dataset.record))
+
+  user[0].name = ev.target.user_name.value
+  user[0].age = parseInt(ev.target.user_age.value)
+  user[0].sex = ev.target.user_sex.value
+  user[0].update()
+}
+
+function deleteRecord(ev) {
+  const user = User.all.filter(el => el.id === parseInt(ev.target.dataset.record))
+  user[0].delete()
+}

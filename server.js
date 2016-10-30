@@ -1,32 +1,27 @@
-var pg = require('pg'),
-    express = require('express'),
-    port = process.env.PORT || 3000,
-    app = express();
+'use strict';
 
-app.use(express.static(__dirname + "/public"));
+const pg = require('pg')
+const express = require('express')
+const port = process.env.PORT || 3000
+const app = express()
+const conString = 'postgresql://sjschmidt@localhost:5432'
 
-app.get('/api/users', function(req, res) {
-  var conString = process.env.ELEPHANTSQL_URL || null;
-  var client = new pg.Client(conString);
+app.get('/api/users', (req, res) => {
+  const client = new pg.Client(conString)
 
-  client.connect(function(err) {
-    if(err) {
-      return console.error('could not connect to postgres', err);
-    }
-    client.query('SELECT * FROM users', function(err, result) {
-      if(err) {
-        return console.error('error running query', err);
-      }
+  client.connect(err => {
+    if (err) console.error('could not connect to postgres', err)
+
+    client.query('SELECT * FROM users', (err, result) => {
+      if(err) console.error('error running query', err)
       res.send(result);
       client.end();
     });
   });
-})
+});
 
-app.get('/api/users/add', function(req, res) {
-  var conString = process.env.ELEPHANTSQL_URL || null;
-  var client = new pg.Client(conString);
-  console.log('connected');
+app.all('/api/users/add', function(req, res) {
+  const client = new pg.Client(conString);
 
   client.connect(function(err) {
     if(err) {
@@ -40,23 +35,22 @@ app.get('/api/users/add', function(req, res) {
           return console.error('error running query', err);
         }
       client.end();
-      console.log('query ended');
     });
   });
   res.redirect('/');
 })
 
-app.get('/api/users/update', function(req, res) {
-  var conString = process.env.ELEPHANTSQL_URL || null;
-  var client = new pg.Client(conString);
+app.all('/api/users/update', function(req, res) {
+  const client = new pg.Client(conString);
+  console.log(req.query);
 
   client.connect(function(err) {
     if(err) {
       return console.error('could not connect to postgres', err);
     }
     client.query(
-      'UPDATE users SET(name, age, sex) VALUES($1, $2, $3) WHERE id=' + req.query.id,
-      [req.query.name, req.query.age, req.query.sex],
+      'UPDATE users SET name = $1, age = $2, sex = $3 WHERE id = $4',
+      [req.query.name, req.query.age, req.query.sex, req.query.id],
       function(err, result) {
         if(err) {
           return console.error('error running query', err);
@@ -68,8 +62,7 @@ app.get('/api/users/update', function(req, res) {
 })
 
 app.get('/api/users/delete', function(req, res) {
-  var conString = process.env.ELEPHANTSQL_URL || null;
-  var client = new pg.Client(conString);
+  const client = new pg.Client(conString);
 
   client.connect(function(err) {
     if(err) {
@@ -86,8 +79,7 @@ app.get('/api/users/delete', function(req, res) {
 })
 
 app.get('/', function(req, res) {
-  var conString = process.env.ELEPHANTSQL_URL || null;
-  var client = new pg.Client(conString);
+  const client = new pg.Client(conString);
 
   client.connect(function(err) {
     if(err) {
@@ -104,6 +96,8 @@ app.get('/', function(req, res) {
   });
   res.sendFile(__dirname + '/public/index.html');
 });
+
+app.use(express.static(__dirname + "/public"));
 
 app.listen(port, function() {
   console.log('Server started on port ' + port + '!');

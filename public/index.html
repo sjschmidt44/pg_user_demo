@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/styles/reset.css" charset="utf-8">
     <link rel="stylesheet" href="/styles/layout.css" charset="utf-8">
     <link rel="stylesheet" href="/styles/style.css" charset="utf-8">
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   </head>
   <body>
     <header class='container'>
@@ -24,17 +24,17 @@
           <input id='user_name' type="text" placeholder="Name">
           <input id='user_age' type="number" placeholder="Age">
           <input id='user_sex' type="text" placeholder="Sex">
-          <input id='user_submit' type="submit">
+          <input id='user_submit' type="submit" value="Enter">
         </form>
       </div>
       <div id='users' class='container'>
+        <p><em>Click for update</em> || <em>Dbl-click for update</em></p><hr>
         <section class='user-template three columns' hidden data-record=''>
           <ul>
             <h3></h3>
             <li></li>
             <li></li>
             <li></li>
-            <p><em>Click the record to delete</em></p>
           </ul>
         </section>
       </div>
