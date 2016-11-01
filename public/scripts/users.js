@@ -32,6 +32,7 @@ User.prototype.toHTML = function() {
 User.clearHTML = () => {
   $('.user-template').siblings().remove()
   User.all = []
+  // User.loadAll()
 }
 
 User.renderAll = () => {
@@ -40,20 +41,20 @@ User.renderAll = () => {
 
 User.prototype.add = function() {
   const vals = {name: this.name, age: this.age, sex: this.sex}
-  $.get('/api/users/add', vals)
+  $.post('/api/users', vals)
   .then(User.clearHTML, err => console.error(err))
   .then(User.loadAll, err => console.error(err))
 }
 
 User.prototype.update = function() {
   const vals = {id: this.id, name: this.name, age: this.age, sex: this.sex}
-  $.get('/api/users/update', vals)
+  $.ajax({url: '/api/users', method: 'PUT', data: vals})
   .then(User.clearHTML, err => console.error(err))
   .then(User.loadAll, err => console.error(err))
 }
 
 User.prototype.delete = function() {
-  $.get('/api/users/delete', {id: this.id})
+  $.ajax({url: '/api/users', method: 'DELETE', data: {id: this.id}})
   .then(User.clearHTML, err => console.error(err))
   .then(User.loadAll, err => console.error(err))
 }
