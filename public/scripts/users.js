@@ -32,7 +32,6 @@ User.prototype.toHTML = function() {
 User.clearHTML = () => {
   $('.user-template').siblings().remove()
   User.all = []
-  // User.loadAll()
 }
 
 User.renderAll = () => {
