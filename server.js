@@ -10,7 +10,7 @@ const conString = 'postgresql://localhost:5432'
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.get('/api/users', (req, res) => {
+app.get('/api/users/:id', (req, res) => {
   const client = new pg.Client(conString)
 
   client.connect(err => {
