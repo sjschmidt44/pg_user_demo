@@ -63,7 +63,7 @@ app.delete('/api/users', (req, res) => {
 
   client.connect(err => {
     if(err) console.error('could not connect to postgres', err)
-    client.query('DELETE FROM users WHERE id=' + req.body.id, (err) => {
+    client.query('DELETE FROM users WHERE id=$1', [req.body.id], (err) => {
       if(err) console.error('error running query', err)
       client.end()
     })
