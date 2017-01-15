@@ -16,9 +16,9 @@ app.get('/api/users/:id', (req, res) => {
   client.connect(err => {
     if(err) console.error('could not connect to postgres', err)
 
-    client.query('SELECT * FROM users', (err, result) => {
+    client.query('SELECT * FROM users', (err, results) => {
       if(err) console.error('error running query', err)
-      res.send(result)
+      res.send(results)
       client.end()
     })
   })
